@@ -1,12 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider, useSelector } from "react-redux";
+import { ThemeProvider } from "styled-components";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import GlobalStyle from "./index.style";
+import configureStore from "./store";
+import { App } from "./components";
+import { light, dark } from "./themes";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const Body = () => {
+  const themeName = useSelector(({ theme }) => theme.name);
+
+  return (
+    <ThemeProvider theme={{ light, dark }[themeName]}>
+      <GlobalStyle />
+      <App />
+    </ThemeProvider>
+  );
+};
+
+ReactDOM.render(
+  <Provider store={configureStore()}>
+    <Body />
+  </Provider>,
+  document.getElementById("root")
+);
